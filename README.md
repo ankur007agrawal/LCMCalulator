@@ -1,4 +1,4 @@
-# LCM Calculator
+# LCM and HCF Calculator
 
 A simple and user-friendly web application to calculate the Least Common Multiple (LCM) of multiple numbers.
 
