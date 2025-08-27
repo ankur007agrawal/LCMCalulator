@@ -22,6 +22,16 @@
             color: #333;
             text-align: center;
         }
+        .operation-section {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .operation-section select {
+            padding: 8px;
+            font-size: 1em;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
         .input-section {
             margin: 20px 0;
         }
@@ -58,9 +68,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>LCM Calculator</h1>
+        <h1>LCM and HCF Calculator</h1>
+        <div class="operation-section">
+            <label>Select Operation:</label>
+            <select id="operation" onchange="updateLabels()">
+                <option value="lcm">LCM (Least Common Multiple)</option>
+                <option value="hcf">HCF (Highest Common Factor)</option>
+            </select>
+        </div>
         <div class="input-section">
-            <label for="numCount">How many numbers do you want to calculate LCM for?</label>
+            <label for="numCount">How many numbers do you want to calculate for?</label>
             <input type="number" id="numCount" min="2" value="2">
             <button onclick="generateInputs()">Generate Input Fields</button>
         </div>
@@ -69,6 +86,14 @@
     </div>
 
     <script>
+        function updateLabels() {
+            const operation = document.getElementById('operation').value;
+            const calculateButton = document.querySelector('button[onclick="calculateResult()"]');
+            if (calculateButton) {
+                calculateButton.textContent = `Calculate ${operation.toUpperCase()}`;
+            }
+        }
+
         function generateInputs() {
             const count = document.getElementById('numCount').value;
             const container = document.getElementById('numberInputs');
@@ -88,8 +113,9 @@
             }
 
             const calculateButton = document.createElement('button');
-            calculateButton.textContent = 'Calculate LCM';
-            calculateButton.onclick = calculateLCM;
+            const operation = document.getElementById('operation').value;
+            calculateButton.textContent = `Calculate ${operation.toUpperCase()}`;
+            calculateButton.onclick = calculateResult;
             container.appendChild(calculateButton);
         }
 
@@ -104,9 +130,10 @@
             return Math.abs(a * b) / gcd(a, b);
         }
 
-        function calculateLCM() {
+        function calculateResult() {
             const inputs = document.getElementsByClassName('number-input');
             const numbers = Array.from(inputs).map(input => parseInt(input.value));
+            const operation = document.getElementById('operation').value;
             
             if (numbers.some(isNaN) || numbers.some(n => n <= 0)) {
                 alert('Please enter valid positive numbers');
@@ -114,12 +141,18 @@
             }
 
             let result = numbers[0];
-            for (let i = 1; i < numbers.length; i++) {
-                result = lcm(result, numbers[i]);
+            if (operation === 'lcm') {
+                for (let i = 1; i < numbers.length; i++) {
+                    result = lcm(result, numbers[i]);
+                }
+            } else {
+                for (let i = 1; i < numbers.length; i++) {
+                    result = gcd(result, numbers[i]);
+                }
             }
 
             document.getElementById('result').innerHTML = `
-                <strong>The LCM of ${numbers.join(', ')} is: ${result}</strong>
+                <strong>The ${operation.toUpperCase()} of ${numbers.join(', ')} is: ${result}</strong>
             `;
         }
 

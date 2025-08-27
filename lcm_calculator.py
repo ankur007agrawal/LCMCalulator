@@ -4,6 +4,13 @@ def calculate_gcd(a, b):
         a, b = b, a % b
     return a
 
+def calculate_multiple_gcd(numbers):
+    """Calculate the GCD (HCF) of multiple numbers."""
+    result = numbers[0]
+    for i in range(1, len(numbers)):
+        result = calculate_gcd(result, numbers[i])
+    return result
+
 def calculate_lcm(a, b):
     """Calculate the Least Common Multiple of two numbers."""
     return abs(a * b) // calculate_gcd(a, b)
@@ -16,11 +23,16 @@ def calculate_multiple_lcm(numbers):
     return lcm
 
 def main():
-    print("Welcome to LCM Calculator!")
+    print("Welcome to LCM and HCF Calculator!")
     
     while True:
         try:
-            n = int(input("\nHow many numbers do you want to find LCM of? (Enter a number >= 2): "))
+            operation = input("\nWhat would you like to calculate? (lcm/hcf): ").lower()
+            if operation not in ['lcm', 'hcf']:
+                print("Please enter either 'lcm' or 'hcf'.")
+                continue
+
+            n = int(input(f"\nHow many numbers do you want to find {operation.upper()} of? (Enter a number >= 2): "))
             if n < 2:
                 print("Please enter at least 2 numbers.")
                 continue
@@ -38,10 +50,14 @@ def main():
                     except ValueError:
                         print("Invalid input! Please enter a valid positive integer.")
             
-            result = calculate_multiple_lcm(numbers)
-            print(f"\nThe LCM of {numbers} is: {result}")
+            if operation == 'lcm':
+                result = calculate_multiple_lcm(numbers)
+            else:
+                result = calculate_multiple_gcd(numbers)
             
-            choice = input("\nDo you want to calculate another LCM? (yes/no): ").lower()
+            print(f"\nThe {operation.upper()} of {numbers} is: {result}")
+            
+            choice = input(f"\nDo you want to calculate another {operation.upper()}? (yes/no): ").lower()
             if choice != 'yes':
                 break
                 
