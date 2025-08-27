@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCM Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .input-section {
+            margin: 20px 0;
+        }
+        .number-inputs {
+            margin: 20px 0;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LCM Calculator</h1>
+        <div class="input-section">
+            <label for="numCount">How many numbers do you want to calculate LCM for?</label>
+            <input type="number" id="numCount" min="2" value="2">
+            <button onclick="generateInputs()">Generate Input Fields</button>
+        </div>
+        <div id="numberInputs" class="number-inputs"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function generateInputs() {
+            const count = document.getElementById('numCount').value;
+            const container = document.getElementById('numberInputs');
+            container.innerHTML = '';
+            
+            if (count < 2) {
+                alert('Please enter at least 2 numbers');
+                return;
+            }
+
+            for (let i = 0; i < count; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.placeholder = `Number ${i + 1}`;
+                input.className = 'number-input';
+                container.appendChild(input);
+            }
+
+            const calculateButton = document.createElement('button');
+            calculateButton.textContent = 'Calculate LCM';
+            calculateButton.onclick = calculateLCM;
+            container.appendChild(calculateButton);
+        }
+
+        function gcd(a, b) {
+            while (b) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        }
+
+        function lcm(a, b) {
+            return Math.abs(a * b) / gcd(a, b);
+        }
+
+        function calculateLCM() {
+            const inputs = document.getElementsByClassName('number-input');
+            const numbers = Array.from(inputs).map(input => parseInt(input.value));
+            
+            if (numbers.some(isNaN) || numbers.some(n => n <= 0)) {
+                alert('Please enter valid positive numbers');
+                return;
+            }
+
+            let result = numbers[0];
+            for (let i = 1; i < numbers.length; i++) {
+                result = lcm(result, numbers[i]);
+            }
+
+            document.getElementById('result').innerHTML = `
+                <strong>The LCM of ${numbers.join(', ')} is: ${result}</strong>
+            `;
+        }
+
+        // Initialize with 2 input fields
+        generateInputs();
+    </script>
+</body>
+</html>
